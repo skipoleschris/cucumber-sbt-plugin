@@ -1,6 +1,7 @@
 .DS_Store
 .idea/workspace.xml
 lib
+lib_managed
 project/boot
 project/build/target
 target
