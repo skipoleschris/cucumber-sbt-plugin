@@ -18,21 +18,23 @@ trait CucumberProject extends BasicScalaProject {
   def devCucumberOptions = "--format" :: "pretty" :: Nil
   def htmlCucumberOptions = "--format" :: "html" :: "--out" :: "target/cucumber.html" :: Nil
 
-  // Paths and directories
-  def scalaLibraryPath = Path.fromFile(buildScalaInstance.libraryJar)
+  // Other configurations - override to customise location
   def featuresDirectory = info.projectPath / "features"
-  def jRubyHome = info.projectPath / "lib_managed" / "cucumber_gems"
-  def gemPath = jRubyHome / "gems"
+
+  // Paths and directories
+  private def scalaLibraryPath = Path.fromFile(buildScalaInstance.libraryJar)
+  private def jRubyHome = info.projectPath / "lib_managed" / "cucumber_gems"
+  private def gemPath = jRubyHome / "gems"
 
   // Cuke4Duke configuration
-  def cuke4DukeGems = List("cucumber --version %s --source http://rubygems.org/".format(cucumberVersion),
-                           "cuke4duke --version %s --source http://rubygems.org/".format(cuke4DukeVersion))
-  def cuke4DukeArgs = List("-Dcuke4duke.objectFactory=cuke4duke.internal.jvmclass.PicoFactory")
-  val cuke4DukeBin = gemPath / "bin" / "cuke4duke"
+  private def cuke4DukeGems = List(Gem("cucumber", cucumberVersion, "http://rubygems.org/"),
+                                   Gem("cuke4duke", cuke4DukeVersion, "http://rubygems.org/"))
+  private def cuke4DukeArgs = List("-Dcuke4duke.objectFactory=cuke4duke.internal.jvmclass.PicoFactory")
+  private val cuke4DukeBin = gemPath / "bin" / "cuke4duke"
 
-  val cuke4DukeRepo = "Cuke4Duke Maven Repository" at "http://cukes.info/maven"
-  val cuke4Duke = "cuke4duke" % "cuke4duke" % cuke4DukeVersion % "test"
-  val picoContainer = "org.picocontainer" % "picocontainer" % picoContainerVersion % "test"
+  private val cuke4DukeRepo = "Cuke4Duke Maven Repository" at "http://cukes.info/maven"
+  private val cuke4Duke = "cuke4duke" % "cuke4duke" % cuke4DukeVersion % "test"
+  private val picoContainer = "org.picocontainer" % "picocontainer" % picoContainerVersion % "test"
 
   // jRuby
   private val jRuby = new JRuby(fullClasspath(Configurations.Test),
@@ -42,17 +44,24 @@ trait CucumberProject extends BasicScalaProject {
   // Automated Cucumber and Cuke4Duke Gem Installation
   override def updateAction = updateGems dependsOn(updateNoGemInstall)
 
-  lazy val updateGems = task {
+  private lazy val updateGems = task {
     installGems match {
       case 0 => None
       case _ => Some("Installation of required gems failed!")
     }
   }
-  lazy val updateNoGemInstall = super.updateAction
+  private lazy val updateNoGemInstall = super.updateAction
 
   private def installGems = {
     log.info("Installing required gems for Cucumber and Cuke4Duke...")
-    cuke4DukeGems.map(jRuby.installGem(_)).reduceLeft(_ + _)
+    def gemInstalled(gem: Gem) = {
+      val gemDirectory = gemPath / "gems" / (gem.name + "-" + gem.version)
+      gemDirectory.exists
+    }
+    cuke4DukeGems.filter(!gemInstalled(_)) match {
+      case Nil => log.info("All gems already installed."); 0
+      case x => x.map(gem => jRuby.installGem(gem.command)).reduceLeft(_ + _)
+    }
   }
 
   // Execute cucumber
@@ -67,17 +76,17 @@ trait CucumberProject extends BasicScalaProject {
   }
 
   lazy val cucumber = cucumberAction dependsOn(testCompile) describedAs "Runs cucumber features with clean report output on the console"
-  def cucumberAction = task {
+  private def cucumberAction = task {
     runCucumber(standardCucumberOptions)
   }
 
   lazy val cucumberDev = cucumberDevAction dependsOn(testCompile) describedAs "Runs cucumber features with developer report output on the console"
-  def cucumberDevAction = task {
+  private def cucumberDevAction = task {
     runCucumber(devCucumberOptions)
   }
 
   lazy val cucumberHtml = cucumberHtmlAction dependsOn(testCompile) describedAs "Runs cucumber features with html report in the target directory"
-  def cucumberHtmlAction = task {
+  private def cucumberHtmlAction = task {
     runCucumber(htmlCucumberOptions)
   }
 }

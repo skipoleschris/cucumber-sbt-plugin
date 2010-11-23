@@ -63,7 +63,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.1"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.2.0"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
@@ -86,6 +86,7 @@ The plugin supports a number of customisations. The following overrides can be a
 * cucumberVersion - Allows overriding the version of Cucumber that will be used (default: 0.9.4)
 * cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.2)
 * picoContainerVersion - Allows overriding the version of PicoContainer used by cuke4duke (default: 2.11.2)
+* featuresDirectory - The location cucumber looks in for feature files (default: info.projectPath / "features")
 * extraCucumberOptions - Allows specifying of additional options to Cucumber, such as tags or names (default: Empty List)
 * standardCucumberOptions - Allows overriding the custom options for the 'cucumber' goal (default: --format pretty --no-source --no-snippets)
 * devCucumberOptions - Allows overriding the custom options for the 'cucumber-dev' goal (default: --format pretty)
