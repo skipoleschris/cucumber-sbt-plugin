@@ -65,28 +65,44 @@ trait CucumberProject extends BasicScalaProject {
   }
 
   // Execute cucumber
-  private def runCucumber(taskOptions: List[String]) = {
+  private def runCucumber(taskOptions: List[String],
+                          tags: List[String],
+                          names: List[String]) = {
     jRuby(List(cuke4DukeBin.absolutePath,
                featuresDirectory.absolutePath,
                "--require", testCompilePath.absolutePath,
-               "--color") ++ taskOptions ++ extraCucumberOptions) match {
+               "--color") ++ taskOptions ++ extraCucumberOptions ++
+               tags.flatMap(List("--tags", _)) ++
+               names.flatMap(List("--name", _))) match {
       case 0 => None
       case code => Some("Cucumber execution failed! - Exit code: " + code)
     }
   }
 
-  lazy val cucumber = cucumberAction dependsOn(testCompile) describedAs "Runs cucumber features with clean report output on the console"
-  private def cucumberAction = task {
-    runCucumber(standardCucumberOptions)
-  }
+  lazy val cucumber = task { args =>
+    cucumberAction(tagsFromArgs(args), namesFromArgs(args))
+  } describedAs "Runs cucumber features with clean report output on the console"
+  private def cucumberAction(tags: List[String], names: List[String]) = task {
+    runCucumber(standardCucumberOptions, tags, names)
+  } dependsOn(testCompile)
 
-  lazy val cucumberDev = cucumberDevAction dependsOn(testCompile) describedAs "Runs cucumber features with developer report output on the console"
-  private def cucumberDevAction = task {
-    runCucumber(devCucumberOptions)
-  }
+  lazy val cucumberDev = task { args =>
+    cucumberDevAction(tagsFromArgs(args), namesFromArgs(args))
+  } describedAs "Runs cucumber features with developer report output on the console"
+  private def cucumberDevAction(tags: List[String], names: List[String]) = task {
+    runCucumber(devCucumberOptions, tags, names)
+  } dependsOn(testCompile)
 
-  lazy val cucumberHtml = cucumberHtmlAction dependsOn(testCompile) describedAs "Runs cucumber features with html report in the target directory"
-  private def cucumberHtmlAction = task {
-    runCucumber(htmlCucumberOptions)
-  }
+  lazy val cucumberHtml = task { args =>
+    cucumberHtmlAction(tagsFromArgs(args), namesFromArgs(args))
+  } describedAs "Runs cucumber features with html report in the target directory"
+  private def cucumberHtmlAction(tags: List[String], names: List[String]) = task {
+    runCucumber(htmlCucumberOptions, tags, names)
+  } dependsOn(testCompile)
+
+  private def tagsFromArgs(args: Array[String]) =
+    args.filter(arg => arg.startsWith("@") || arg.startsWith("~")).toList
+
+  private def namesFromArgs(args: Array[String]) =
+    args.filter(arg => !arg.startsWith("@") && !arg.startsWith("~")).toList
 }
