@@ -5,4 +5,13 @@ class TestProject(info: ProjectInfo) extends DefaultWebProject(info) with Cucumb
 
   // Test Dependencies
   val scalatest = "org.scalatest" % "scalatest" % "1.2" % "test"
+
+  lazy val ninja = task { args =>
+    ninjaAction(args(0))
+  } describedAs("Hee-yah!")
+
+  def ninjaAction(name: String) = task {
+    println(name)
+    None
+  }
 }

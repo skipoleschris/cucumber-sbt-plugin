@@ -18,6 +18,15 @@ Just run one of the cucumber actions to run all of the cucumber features. Featur
 * cucumber-dev - Runs the cucumber tool with pretty output to the console and source and snippets turned on
 * cucumber-html - Runs the cucumber tool and generates an output cucumber.html file in the target directory
 
+Each task also accepts parameter arguments. E.g.:
+    cucumber @demo,~@in-progress
+would run features tagged as @demo and not those tagged as @in-progress. Also:
+    cucumber "User admin"
+would run features with a name matched to "User admin". Multiple arguments can be supplied and honour the following rules:
+
+* arguments starting with @ or ~ will be passed to cucumber using the --tags flag
+* arguments starting with anything else will be passed to cucumber using the --name flag
+
 ## Writing Features ##
 Features are written in text format and are placed in .feature files inside the 'features' directory. For more info on writing features please see the [Cucumber](http://cukes.info) website.
 For example:

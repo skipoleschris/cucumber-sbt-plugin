@@ -1,3 +1,4 @@
+@example
 Feature: Cucumber
   In order to implement BDD in my Scala project
   As a developer
