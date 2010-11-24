@@ -11,6 +11,8 @@ class JRuby(val classpath: PathFinder,
             val defaultArgs: List[String],
             val jRubyHome: Path,
             val gemPath: Path,
+            val maxMemory: String,
+            val maxPermGen: String,
             val log: Logger) {
 
   if ( !jRubyHome.exists ) jRubyHome.asFile.mkdirs
@@ -32,7 +34,8 @@ class JRuby(val classpath: PathFinder,
 
   private def classpathAsString =
     (scalaLibraryPath.asFile :: classpath.getFiles.toList).map(_.getAbsolutePath).mkString(File.pathSeparator)
-  private def javaArgs = defaultArgs ++ ("-classpath" :: classpathAsString :: "org.jruby.Main" :: Nil)
+  private def javaArgs = defaultArgs ++ ("-Xmx%s".format(maxMemory) :: "-XX:MaxPermSize=%s".format(maxPermGen) ::
+                                         "-classpath" :: classpathAsString :: "org.jruby.Main" :: Nil)
   private def jRubyEnv = Map("GEM_PATH" -> gemPath.absolutePath,
                              "HOME" -> jRubyHome.absolutePath)
 }
