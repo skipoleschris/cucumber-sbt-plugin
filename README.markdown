@@ -73,7 +73,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.2.0"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.3.0"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
