@@ -23,6 +23,10 @@ trait CucumberProject extends BasicScalaProject {
   // Other configurations - override to customise location
   def featuresDirectory = info.projectPath / "features"
 
+  // JVM Memory options for JRuby
+  def jRubyMaxMemory = "256M"
+  def jRubyPermGen = "64M"
+
   // Paths and directories
   private def scalaLibraryPath = Path.fromFile(buildScalaInstance.libraryJar)
   private def jRubyHome = info.projectPath / "lib_managed" / "cucumber_gems"
@@ -42,7 +46,7 @@ trait CucumberProject extends BasicScalaProject {
   // jRuby
   private val jRuby = new JRuby(fullClasspath(Configurations.Test),
                                 scalaLibraryPath, cuke4DukeArgs,
-                                jRubyHome, gemPath, log)
+                                jRubyHome, gemPath, jRubyMaxMemory, jRubyPermGen, log)
 
   // Automated Cucumber and Cuke4Duke Gem Installation
   override def updateAction = updateGems dependsOn(updateNoGemInstall)
