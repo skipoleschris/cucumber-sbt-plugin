@@ -11,12 +11,14 @@ trait CucumberProject extends BasicScalaProject {
   def cucumberVersion = "0.9.4"
   def cuke4DukeVersion = "0.4.2"
   def picoContainerVersion = "2.11.2"
+  def prawnVersion = "0.8.4"
 
   // Individual task options - override to customise behaviour
   def extraCucumberOptions: List[String] = Nil
   def standardCucumberOptions = "--format" :: "pretty" :: "--no-source" :: "--no-snippets" :: Nil
   def devCucumberOptions = "--format" :: "pretty" :: Nil
   def htmlCucumberOptions = "--format" :: "html" :: "--out" :: "target/cucumber.html" :: Nil
+  def pdfCucumberOptions = "--format" :: "pdf" :: "--out" :: "target/cucumber.pdf" :: Nil
 
   // Other configurations - override to customise location
   def featuresDirectory = info.projectPath / "features"
@@ -28,7 +30,8 @@ trait CucumberProject extends BasicScalaProject {
 
   // Cuke4Duke configuration
   private def cuke4DukeGems = List(Gem("cucumber", cucumberVersion, "http://rubygems.org/"),
-                                   Gem("cuke4duke", cuke4DukeVersion, "http://rubygems.org/"))
+                                   Gem("cuke4duke", cuke4DukeVersion, "http://rubygems.org/"),
+                                   Gem("prawn", prawnVersion, "http://rubygems.org"))
   private def cuke4DukeArgs = List("-Dcuke4duke.objectFactory=cuke4duke.internal.jvmclass.PicoFactory")
   private val cuke4DukeBin = gemPath / "bin" / "cuke4duke"
 
@@ -98,6 +101,13 @@ trait CucumberProject extends BasicScalaProject {
   } describedAs "Runs cucumber features with html report in the target directory"
   private def cucumberHtmlAction(tags: List[String], names: List[String]) = task {
     runCucumber(htmlCucumberOptions, tags, names)
+  } dependsOn(testCompile)
+
+  lazy val cucumberPdf = task { args =>
+    cucumberPdfAction(tagsFromArgs(args), namesFromArgs(args))
+  } describedAs "Runs cucumber features with pdf report in the target directory"
+  private def cucumberPdfAction(tags: List[String], names: List[String]) = task {
+    runCucumber(pdfCucumberOptions, tags, names)
   } dependsOn(testCompile)
 
   private def tagsFromArgs(args: Array[String]) =
