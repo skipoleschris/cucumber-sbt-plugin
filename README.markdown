@@ -17,6 +17,7 @@ Just run one of the cucumber actions to run all of the cucumber features. Featur
 * cucumber - Runs the cucumber tool with pretty output to the console and source and snippets turned off
 * cucumber-dev - Runs the cucumber tool with pretty output to the console and source and snippets turned on
 * cucumber-html - Runs the cucumber tool and generates an output cucumber.html file in the target directory
+* cucumber-pdf - Runs the cucumber tool and generates an output cucumber.pdf file in the target directory
 
 Each task also accepts parameter arguments. E.g.:
     cucumber @demo,~@in-progress
@@ -95,11 +96,13 @@ The plugin supports a number of customisations. The following overrides can be a
 * cucumberVersion - Allows overriding the version of Cucumber that will be used (default: 0.9.4)
 * cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.2)
 * picoContainerVersion - Allows overriding the version of PicoContainer used by cuke4duke (default: 2.11.2)
+* prawnVersion - Allows overriding the version of the prawn gem that will be used (default 0.8.4)
 * featuresDirectory - The location cucumber looks in for feature files (default: info.projectPath / "features")
 * extraCucumberOptions - Allows specifying of additional options to Cucumber, such as tags or names (default: Empty List)
 * standardCucumberOptions - Allows overriding the custom options for the 'cucumber' goal (default: --format pretty --no-source --no-snippets)
 * devCucumberOptions - Allows overriding the custom options for the 'cucumber-dev' goal (default: --format pretty)
 * htmlCucumberOptions - Allows overriding the custom options for the 'cucumber-html' goal (default: --format html --out target/cucumber.html)
+* pdfCucumberOptions - Allows overriding the custom options for the 'cucumber-pdf' goal (default: --format pdf --out target/cucumber.pdf)
 
 ## Roadmap ##
 Current plans:
