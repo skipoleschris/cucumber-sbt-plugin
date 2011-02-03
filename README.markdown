@@ -35,8 +35,8 @@ would run features with a name matched to "User admin". Multiple arguments can b
 * arguments starting with @ or ~ will be passed to cucumber using the --tags flag
 * arguments starting with anything else will be passed to cucumber using the --name flag
 
-IMPORTANT NOTE: A current defect in sbt prevents tasks with parameters being run against the parent project in a multi-module sbt project. This is why there are separate tasks with parameters. To use a parameter task you mush first select a child project.
-The non-parameter tasks can be run against the parent project or a selected child. This separation will be removed once sbt supports calling tasks with parameters on the parent project.
+IMPORTANT NOTE: The current design of sbt prevents tasks with parameters (method tasks) being run against the parent project in a multi-module sbt project. This is why there are separate tasks with parameters. To use a parameter task you mush first select a child project.
+The non-parameter tasks can be run against the parent project or a selected child.
 
 ## Writing Features ##
 Features are written in text format and are placed in .feature files inside the 'features' directory. For more info on writing features please see the [Cucumber](http://cukes.info) website.
