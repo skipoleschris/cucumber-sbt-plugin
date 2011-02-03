@@ -8,8 +8,8 @@ import _root_.sbt._
 trait CucumberProject extends BasicScalaProject {
 
   // Versions - override to support newer versions
-  def cucumberVersion = "0.9.4"
-  def cuke4DukeVersion = "0.4.2"
+  def cucumberVersion = "0.10.0"
+  def cuke4DukeVersion = "0.4.3"
   def picoContainerVersion = "2.11.2"
   def prawnVersion = "0.8.4"
 
@@ -20,7 +20,7 @@ trait CucumberProject extends BasicScalaProject {
   def htmlCucumberOptions = "--format" :: "html" :: "--out" :: htmlReportPath.absolutePath :: Nil
   def pdfCucumberOptions = "--format" :: "pdf" :: "--out" :: pdfReportPath.absolutePath :: Nil
 
-  // Overide report output locations
+  // Override report output locations
   def reportPath = outputPath / "cucumber-report"
   def htmlReportPath = reportPath / "cucumber.html"
   def pdfReportPath = reportPath / "cucumber.pdf"
@@ -103,33 +103,40 @@ trait CucumberProject extends BasicScalaProject {
     }
   }
 
-  lazy val cucumber = task { args =>
-    cucumberAction(tagsFromArgs(args), namesFromArgs(args))
-  } describedAs "Runs cucumber features with clean report output on the console"
-  private def cucumberAction(tags: List[String], names: List[String]) = task {
+  protected def cucumberAction(tags: List[String], names: List[String]) = task {
     runCucumber(standardCucumberOptions, tags, names)
-  } dependsOn(testCompile)
+  } dependsOn(testCompile) describedAs ("Runs cucumber features with output on the console")
 
-  lazy val cucumberDev = task { args =>
-    cucumberDevAction(tagsFromArgs(args), namesFromArgs(args))
-  } describedAs "Runs cucumber features with developer report output on the console"
-  private def cucumberDevAction(tags: List[String], names: List[String]) = task {
+  protected def cucumberDevAction(tags: List[String], names: List[String]) = task {
     runCucumber(devCucumberOptions, tags, names)
-  } dependsOn(testCompile)
+  } dependsOn(testCompile) describedAs ("Runs cucumber features with developer report output on the console")
 
-  lazy val cucumberHtml = task { args =>
-    cucumberHtmlAction(tagsFromArgs(args), namesFromArgs(args))
-  } describedAs "Runs cucumber features with html report in the target directory"
-  private def cucumberHtmlAction(tags: List[String], names: List[String]) = task {
+  protected def cucumberHtmlAction(tags: List[String], names: List[String]) = task {
     runCucumber(htmlCucumberOptions, tags, names)
-  } dependsOn(testCompile)
+  } dependsOn(testCompile) describedAs ("Runs cucumber features with html report in the target directory")
 
-  lazy val cucumberPdf = task { args =>
-    cucumberPdfAction(tagsFromArgs(args), namesFromArgs(args))
-  } describedAs "Runs cucumber features with pdf report in the target directory"
-  private def cucumberPdfAction(tags: List[String], names: List[String]) = task {
+  protected def cucumberPdfAction(tags: List[String], names: List[String]) = task {
     runCucumber(pdfCucumberOptions, tags, names)
-  } dependsOn(testCompile)
+  } dependsOn(testCompile) describedAs ("Runs cucumber features with pdf report in the target directory")
+
+  // Main tasks (no arguments supported)
+  lazy val cucumber = cucumberAction(List(), List())
+  lazy val cucumberDev = cucumberDevAction(List(), List())
+  lazy val cucumberHtml = cucumberHtmlAction(List(), List())
+  lazy val cucumberPdf = cucumberPdfAction(List(), List())
+
+  // NOTE: There is currently a defect in SBT (#143) whereby tasks that take
+  //       arguments cannot be called on the parent project in a multi-project
+  //       configuration. To allow the running of all the cucumber goals from
+  //       within the parent we therefore have to have a separate set of tasks
+  //       that support parameters. These can only be called when a child project
+  //       is selected, whereas the non-parameter versions can be called on the
+  //       parent and child projects. The tasks supporting parameters are appended
+  //       with a 'p'
+  lazy val cucumberp = task { args => cucumberAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cucumberDevp = task { args => cucumberDevAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cucumberHtmlp = task { args => cucumberHtmlAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cucumberPdfp = task { args => cucumberPdfAction(tagsFromArgs(args), namesFromArgs(args)) }
 
   private def tagsFromArgs(args: Array[String]) =
     args.filter(arg => arg.startsWith("@") || arg.startsWith("~")).toList
