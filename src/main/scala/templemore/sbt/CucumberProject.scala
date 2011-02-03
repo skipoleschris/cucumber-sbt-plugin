@@ -125,8 +125,8 @@ trait CucumberProject extends BasicScalaProject {
   lazy val cucumberHtml = cucumberHtmlAction(List(), List())
   lazy val cucumberPdf = cucumberPdfAction(List(), List())
 
-  // NOTE: There is currently a defect in SBT (#143) whereby tasks that take
-  //       arguments cannot be called on the parent project in a multi-project
+  // NOTE: The design of SBT prevents method tasks (tasks with arguments)
+  //       from be called on the parent project in a multi-project
   //       configuration. To allow the running of all the cucumber goals from
   //       within the parent we therefore have to have a separate set of tasks
   //       that support parameters. These can only be called when a child project
