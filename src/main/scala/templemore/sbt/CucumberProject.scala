@@ -17,8 +17,12 @@ trait CucumberProject extends BasicScalaProject {
   def extraCucumberOptions: List[String] = Nil
   def standardCucumberOptions = "--format" :: "pretty" :: "--no-source" :: "--no-snippets" :: Nil
   def devCucumberOptions = "--format" :: "pretty" :: Nil
-  def htmlCucumberOptions = "--format" :: "html" :: "--out" :: "target/cucumber.html" :: Nil
-  def pdfCucumberOptions = "--format" :: "pdf" :: "--out" :: "target/cucumber.pdf" :: Nil
+  def htmlCucumberOptions = "--format" :: "html" :: "--out" :: htmlReportPath.absolutePath :: Nil
+  def pdfCucumberOptions = "--format" :: "pdf" :: "--out" :: pdfReportPath.absolutePath :: Nil
+
+  def reportPath = outputPath / "cucumber-report"
+  def htmlReportPath = reportPath / "cucumber.html"
+  def pdfReportPath = reportPath / "cucumber.pdf"
 
   // Other configurations - override to customise location
   def featuresDirectory = info.projectPath / "features"
@@ -75,6 +79,10 @@ trait CucumberProject extends BasicScalaProject {
   private def runCucumber(taskOptions: List[String],
                           tags: List[String],
                           names: List[String]) = {
+    // Create report directory
+    reportPath.asFile.mkdirs
+
+    // Launch JRuby
     jRuby(List(cuke4DukeBin.absolutePath,
                featuresDirectory.absolutePath,
                "--require", testCompilePath.absolutePath,

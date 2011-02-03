@@ -8,7 +8,7 @@ Based on the original [cuke4duke-sbt-plugin](https://github.com/rubbish/cuke4duk
 * Works with sbt 0.7.4
 * Works with Cucumber 0.9.4
 * Works with cuke4duke 0.4.2
-* Allows projects comipled and running against Scala 2.8.0
+* Allows projects compiled and running against Scala 2.8.0
 * Provides three default actions: cucumber, cucumber-dev and cucumber-html
 
 ## Usage ##
@@ -98,6 +98,9 @@ The plugin supports a number of customisations. The following overrides can be a
 * picoContainerVersion - Allows overriding the version of PicoContainer used by cuke4duke (default: 2.11.2)
 * prawnVersion - Allows overriding the version of the prawn gem that will be used (default 0.8.4)
 * featuresDirectory - The location cucumber looks in for feature files (default: info.projectPath / "features")
+* reportPath - The directory that will be used for report generation (default: outputPath / "cucumber-report")
+* htmlReportPath - The name of the file that the html report will be generated into (default: reportPath / "cucumber.html")
+* pdfReportPath - The name of the file that the pdf report will be generated into (default: reportPath / "cucumber.pdf")
 * extraCucumberOptions - Allows specifying of additional options to Cucumber, such as tags or names (default: Empty List)
 * standardCucumberOptions - Allows overriding the custom options for the 'cucumber' goal (default: --format pretty --no-source --no-snippets)
 * devCucumberOptions - Allows overriding the custom options for the 'cucumber-dev' goal (default: --format pretty)
@@ -105,7 +108,17 @@ The plugin supports a number of customisations. The following overrides can be a
 * pdfCucumberOptions - Allows overriding the custom options for the 'cucumber-pdf' goal (default: --format pdf --out target/cucumber.pdf)
 
 ## Roadmap ##
-Current plans:
 
-* Upgrade to support sbt 0.7.5 and Scala 2.8.1
 
+## Release History ##
+
+### 0.4.0 ###
+* Tested with Scala 2.8.1 and SBT 0.7.5
+* Fixed Issue #3 - It is now possible to configure location and names of output reports
+
+
+### 0.3.1 ###
+* Bug fixes
+
+### 0.3.0 ###
+* First public release
