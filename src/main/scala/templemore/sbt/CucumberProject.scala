@@ -20,6 +20,7 @@ trait CucumberProject extends BasicScalaProject {
   def htmlCucumberOptions = "--format" :: "html" :: "--out" :: htmlReportPath.absolutePath :: Nil
   def pdfCucumberOptions = "--format" :: "pdf" :: "--out" :: pdfReportPath.absolutePath :: Nil
 
+  // Overide report output locations
   def reportPath = outputPath / "cucumber-report"
   def htmlReportPath = reportPath / "cucumber.html"
   def pdfReportPath = reportPath / "cucumber.pdf"
@@ -73,6 +74,14 @@ trait CucumberProject extends BasicScalaProject {
       case Nil => log.info("All gems already installed."); 0
       case x => x.map(gem => jRuby.installGem(gem.command)).reduceLeft(_ + _)
     }
+  }
+
+  // Override clean lib to take down the gems and .gem directories
+  override def cleanLibAction = cleanGems dependsOn(super.cleanLibAction)
+
+  private def cleanGems = task {
+    log.info("Deleteing managed gems...")
+    FileUtilities.clean(jRubyHome.get, log)
   }
 
   // Execute cucumber
