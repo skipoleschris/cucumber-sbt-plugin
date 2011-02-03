@@ -5,10 +5,10 @@ An [sbt](http://simple-build-tool.googlecode.com/) plugin for running [Cucumber]
 
 Based on the original [cuke4duke-sbt-plugin](https://github.com/rubbish/cuke4duke-sbt-plugin) by rubbish. This implementation upgrades to the latest sbt, cucumber and cuke4duke version and provides more default options. Specifically:
 
-* Works with sbt 0.7.4
-* Works with Cucumber 0.9.4
-* Works with cuke4duke 0.4.2
-* Allows projects comipled and running against Scala 2.8.0
+* Works with sbt 0.7.4 & 0.7.5.RC0
+* Works with Cucumber 0.10.0
+* Works with cuke4duke 0.4.3
+* Allows projects compiled and running against Scala 2.8.0 and 2.8.1
 * Provides three default actions: cucumber, cucumber-dev and cucumber-html
 
 ## Usage ##
@@ -19,14 +19,24 @@ Just run one of the cucumber actions to run all of the cucumber features. Featur
 * cucumber-html - Runs the cucumber tool and generates an output cucumber.html file in the target directory
 * cucumber-pdf - Runs the cucumber tool and generates an output cucumber.pdf file in the target directory
 
-Each task also accepts parameter arguments. E.g.:
-    cucumber @demo,~@in-progress
+There are also parameterised versions of each of these tasks (see IMPORTANT NOTE below):
+
+* cucumberp
+* cucumber-devp
+* cucumber-htmlp
+* cucumber-pdfp
+
+Each of these tasks accepts parameter arguments. E.g.:
+    cucumberp @demo,~@in-progress
 would run features tagged as @demo and not those tagged as @in-progress. Also:
-    cucumber "User admin"
+    cucumberp "User admin"
 would run features with a name matched to "User admin". Multiple arguments can be supplied and honour the following rules:
 
 * arguments starting with @ or ~ will be passed to cucumber using the --tags flag
 * arguments starting with anything else will be passed to cucumber using the --name flag
+
+IMPORTANT NOTE: A current defect in sbt prevents tasks with parameters being run against the parent project in a multi-module sbt project. This is why there are separate tasks with parameters. To use a parameter task you mush first select a child project.
+The non-parameter tasks can be run against the parent project or a selected child. This separation will be removed once sbt supports calling tasks with parameters on the parent project.
 
 ## Writing Features ##
 Features are written in text format and are placed in .feature files inside the 'features' directory. For more info on writing features please see the [Cucumber](http://cukes.info) website.
@@ -73,7 +83,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.3.0"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.4.0"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
@@ -93,11 +103,14 @@ This trait will all the cuke4duke dependency into your project for use in writin
 ## Customisation ##
 The plugin supports a number of customisations. The following overrides can be added to your project file to change the behaviour of the plugin:
 
-* cucumberVersion - Allows overriding the version of Cucumber that will be used (default: 0.9.4)
-* cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.2)
+* cucumberVersion - Allows overriding the version of Cucumber that will be used (default: 0.10.0)
+* cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.3)
 * picoContainerVersion - Allows overriding the version of PicoContainer used by cuke4duke (default: 2.11.2)
 * prawnVersion - Allows overriding the version of the prawn gem that will be used (default 0.8.4)
 * featuresDirectory - The location cucumber looks in for feature files (default: info.projectPath / "features")
+* reportPath - The directory that will be used for report generation (default: outputPath / "cucumber-report")
+* htmlReportPath - The name of the file that the html report will be generated into (default: reportPath / "cucumber.html")
+* pdfReportPath - The name of the file that the pdf report will be generated into (default: reportPath / "cucumber.pdf")
 * extraCucumberOptions - Allows specifying of additional options to Cucumber, such as tags or names (default: Empty List)
 * standardCucumberOptions - Allows overriding the custom options for the 'cucumber' goal (default: --format pretty --no-source --no-snippets)
 * devCucumberOptions - Allows overriding the custom options for the 'cucumber-dev' goal (default: --format pretty)
@@ -105,7 +118,20 @@ The plugin supports a number of customisations. The following overrides can be a
 * pdfCucumberOptions - Allows overriding the custom options for the 'cucumber-pdf' goal (default: --format pdf --out target/cucumber.pdf)
 
 ## Roadmap ##
-Current plans:
 
-* Upgrade to support sbt 0.7.5 and Scala 2.8.1
 
+## Release History ##
+
+### 0.4.0 ###
+* Tested with Scala 2.8.1 and SBT 0.7.5
+* Fixed Issue #3 - It is now possible to configure location and names of output reports
+* Fixed Issue #1 - Output reports now generate into target directories of each sub project rather than the parent project in a multi module project
+* Fixed Issue #4 - Cucumber gems are now deleted when running the clean-lib task
+* Fixed Issue #5 - Updated to Cucumber 0.10.0 and cuke4duke 0.4.3
+* Fixed Issue #2 - Allowed cucumber tasks to be called from the parent project with separate parameterised tasks that can only be run on child projects
+
+### 0.3.1 ###
+* Bug fixes
+
+### 0.3.0 ###
+* First public release
