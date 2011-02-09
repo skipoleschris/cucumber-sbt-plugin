@@ -21,15 +21,15 @@ Just run one of the cucumber actions to run all of the cucumber features. Featur
 
 There are also parameterised versions of each of these tasks (see IMPORTANT NOTE below):
 
-* cucumberp
-* cucumber-devp
-* cucumber-htmlp
-* cucumber-pdfp
+* cuke
+* cuke-dev
+* cuke-html
+* cuke-pdf
 
 Each of these tasks accepts parameter arguments. E.g.:
-    cucumberp @demo,~@in-progress
+    cuke @demo,~@in-progress
 would run features tagged as @demo and not those tagged as @in-progress. Also:
-    cucumberp "User admin"
+    cuke "User admin"
 would run features with a name matched to "User admin". Multiple arguments can be supplied and honour the following rules:
 
 * arguments starting with @ or ~ will be passed to cucumber using the --tags flag

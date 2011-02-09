@@ -133,10 +133,10 @@ trait CucumberProject extends BasicScalaProject {
   //       is selected, whereas the non-parameter versions can be called on the
   //       parent and child projects. The tasks supporting parameters are appended
   //       with a 'p'
-  lazy val cucumberp = task { args => cucumberAction(tagsFromArgs(args), namesFromArgs(args)) }
-  lazy val cucumberDevp = task { args => cucumberDevAction(tagsFromArgs(args), namesFromArgs(args)) }
-  lazy val cucumberHtmlp = task { args => cucumberHtmlAction(tagsFromArgs(args), namesFromArgs(args)) }
-  lazy val cucumberPdfp = task { args => cucumberPdfAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cuke = task { args => cucumberAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cukeDev = task { args => cucumberDevAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cukeHtml = task { args => cucumberHtmlAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cukePdf = task { args => cucumberPdfAction(tagsFromArgs(args), namesFromArgs(args)) }
 
   private def tagsFromArgs(args: Array[String]) =
     args.filter(arg => arg.startsWith("@") || arg.startsWith("~")).toList
