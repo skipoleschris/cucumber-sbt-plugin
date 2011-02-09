@@ -21,15 +21,15 @@ Just run one of the cucumber actions to run all of the cucumber features. Featur
 
 There are also parameterised versions of each of these tasks (see IMPORTANT NOTE below):
 
-* cucumberp
-* cucumber-devp
-* cucumber-htmlp
-* cucumber-pdfp
+* cuke
+* cuke-dev
+* cuke-html
+* cuke-pdf
 
 Each of these tasks accepts parameter arguments. E.g.:
-    cucumberp @demo,~@in-progress
+    cuke @demo,~@in-progress
 would run features tagged as @demo and not those tagged as @in-progress. Also:
-    cucumberp "User admin"
+    cuke "User admin"
 would run features with a name matched to "User admin". Multiple arguments can be supplied and honour the following rules:
 
 * arguments starting with @ or ~ will be passed to cucumber using the --tags flag
@@ -83,7 +83,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.4.0"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.4.1"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
@@ -121,6 +121,9 @@ The plugin supports a number of customisations. The following overrides can be a
 
 
 ## Release History ##
+
+### 0.4.1 ###
+* Renamed all the parameterised cucumberp tasks to be cuke instead as this is more in keeping with the Cucumber project naming style
 
 ### 0.4.0 ###
 * Tested with Scala 2.8.1 and SBT 0.7.5
