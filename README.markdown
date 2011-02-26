@@ -117,10 +117,21 @@ The plugin supports a number of customisations. The following overrides can be a
 * htmlCucumberOptions - Allows overriding the custom options for the 'cucumber-html' goal (default: --format html --out target/cucumber.html)
 * pdfCucumberOptions - Allows overriding the custom options for the 'cucumber-pdf' goal (default: --format pdf --out target/cucumber.pdf)
 
+## Before/After Hooks ##
+The plugin supports a number of before and after hooks. These are provided to allow services to be started before cucumber test runs and to shut them down once the test run is complete. The following hooks are provided:
+
+* beforeCucumberSuite and afterCucumberSuite - The default methods that are run. Override these to run custom hooks before/after both the cucumber and cuke tasks
+* beforeCucumber and afterCucumber - Override these custom hooks that run before/after only the cucumber tasks (won't be run for cuke tasks)
+* beforeCuke and afterCuke - Override these custom hooke that run before/after only the cuke tasks (won't be run for cucumber tasks). These have access to the tag and name parameters passed to the task.
+
 ## Roadmap ##
 
 
 ## Release History ##
+
+### 0.5.0 ###
+* Added lifecycle methods that are run before and after cucumber feature executions
+
 
 ### 0.4.1 ###
 * Renamed all the parameterised cucumberp tasks to be cuke instead as this is more in keeping with the Cucumber project naming style
