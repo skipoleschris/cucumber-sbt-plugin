@@ -11,6 +11,9 @@ class TestProject(info: ProjectInfo) extends ParentProject(info) {
   class JarProject(info: ProjectInfo) extends DefaultProject(info) with CucumberProject {
     // Test Dependencies
     val scalatest = "org.scalatest" % "scalatest" % "1.2" % "test"
+
+    override protected def beforeCucumberSuite = println("Will be run before cucumber suite")
+    override protected def afterCucumberSuite = println("Will be run after cucumber suite")
   }
 
   // War project

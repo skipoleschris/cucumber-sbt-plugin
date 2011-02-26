@@ -66,6 +66,7 @@ trait CucumberProject extends BasicScalaProject {
 
   private def installGems = {
     log.info("Installing required gems for Cucumber and Cuke4Duke...")
+    gemPath.asFile.mkdirs
     def gemInstalled(gem: Gem) = {
       val gemDirectory = gemPath / "gems" / (gem.name + "-" + gem.version)
       gemDirectory.exists
@@ -103,27 +104,47 @@ trait CucumberProject extends BasicScalaProject {
     }
   }
 
-  protected def cucumberAction(tags: List[String], names: List[String]) = task {
-    runCucumber(standardCucumberOptions, tags, names)
+  protected def cucumberAction(tags: List[String],
+                               names: List[String],
+                               before: (List[String], List[String]) => Unit,
+                               after: (List[String], List[String]) => Unit) = task {
+    before(tags, names)
+    try { runCucumber(standardCucumberOptions, tags, names) }
+    finally { after(tags, names) }
   } dependsOn(testCompile) describedAs ("Runs cucumber features with output on the console")
 
-  protected def cucumberDevAction(tags: List[String], names: List[String]) = task {
-    runCucumber(devCucumberOptions, tags, names)
+  protected def cucumberDevAction(tags: List[String],
+                                  names: List[String],
+                                  before: (List[String], List[String]) => Unit,
+                                  after: (List[String], List[String]) => Unit) = task {
+    before(tags, names)
+    try { runCucumber(devCucumberOptions, tags, names) }
+    finally { after(tags, names) }
   } dependsOn(testCompile) describedAs ("Runs cucumber features with developer report output on the console")
 
-  protected def cucumberHtmlAction(tags: List[String], names: List[String]) = task {
-    runCucumber(htmlCucumberOptions, tags, names)
+  protected def cucumberHtmlAction(tags: List[String],
+                                   names: List[String],
+                                   before: (List[String], List[String]) => Unit,
+                                   after: (List[String], List[String]) => Unit) = task {
+    before(tags, names)
+    try { runCucumber(htmlCucumberOptions, tags, names) }
+    finally { after(tags, names) }
   } dependsOn(testCompile) describedAs ("Runs cucumber features with html report in the target directory")
 
-  protected def cucumberPdfAction(tags: List[String], names: List[String]) = task {
-    runCucumber(pdfCucumberOptions, tags, names)
+  protected def cucumberPdfAction(tags: List[String],
+                                  names: List[String],
+                                  before: (List[String], List[String]) => Unit,
+                                  after: (List[String], List[String]) => Unit) = task {
+    before(tags, names)
+    try { runCucumber(pdfCucumberOptions, tags, names) }
+    finally { after(tags, names) }
   } dependsOn(testCompile) describedAs ("Runs cucumber features with pdf report in the target directory")
 
   // Main tasks (no arguments supported)
-  lazy val cucumber = cucumberAction(List(), List())
-  lazy val cucumberDev = cucumberDevAction(List(), List())
-  lazy val cucumberHtml = cucumberHtmlAction(List(), List())
-  lazy val cucumberPdf = cucumberPdfAction(List(), List())
+  lazy val cucumber = cucumberAction(List(), List(), internalBeforeCucumber, internalAfterCucumber)
+  lazy val cucumberDev = cucumberDevAction(List(), List(), internalBeforeCucumber, internalAfterCucumber)
+  lazy val cucumberHtml = cucumberHtmlAction(List(), List(), internalBeforeCucumber, internalAfterCucumber)
+  lazy val cucumberPdf = cucumberPdfAction(List(), List(), internalBeforeCucumber, internalAfterCucumber)
 
   // NOTE: The design of SBT prevents method tasks (tasks with arguments)
   //       from be called on the parent project in a multi-project
@@ -133,14 +154,26 @@ trait CucumberProject extends BasicScalaProject {
   //       is selected, whereas the non-parameter versions can be called on the
   //       parent and child projects. The tasks supporting parameters are appended
   //       with a 'p'
-  lazy val cuke = task { args => cucumberAction(tagsFromArgs(args), namesFromArgs(args)) }
-  lazy val cukeDev = task { args => cucumberDevAction(tagsFromArgs(args), namesFromArgs(args)) }
-  lazy val cukeHtml = task { args => cucumberHtmlAction(tagsFromArgs(args), namesFromArgs(args)) }
-  lazy val cukePdf = task { args => cucumberPdfAction(tagsFromArgs(args), namesFromArgs(args)) }
+  lazy val cuke = task { args => cucumberAction(tagsFromArgs(args), namesFromArgs(args), beforeCuke, afterCuke) }
+  lazy val cukeDev = task { args => cucumberDevAction(tagsFromArgs(args), namesFromArgs(args), beforeCuke, afterCuke) }
+  lazy val cukeHtml = task { args => cucumberHtmlAction(tagsFromArgs(args), namesFromArgs(args), beforeCuke, afterCuke) }
+  lazy val cukePdf = task { args => cucumberPdfAction(tagsFromArgs(args), namesFromArgs(args), beforeCuke, afterCuke) }
 
   private def tagsFromArgs(args: Array[String]) =
     args.filter(arg => arg.startsWith("@") || arg.startsWith("~")).toList
 
   private def namesFromArgs(args: Array[String]) =
     args.filter(arg => !arg.startsWith("@") && !arg.startsWith("~")).toList
+
+  // Functions that provide lifecycle hooks to allow before and after actions to be
+  // tied to the running of cucumber features
+  private def internalBeforeCucumber(tags: List[String], names: List[String]) = beforeCucumber
+  private def internalAfterCucumber(tags: List[String], names: List[String]) = afterCucumber
+
+  protected def beforeCucumber = beforeCucumberSuite
+  protected def afterCucumber = afterCucumberSuite
+  protected def beforeCuke(tags: List[String], names: List[String]) = beforeCucumberSuite
+  protected def afterCuke(tags: List[String], names: List[String]) = afterCucumberSuite
+  protected def beforeCucumberSuite = { }
+  protected def afterCucumberSuite = { }
 }
