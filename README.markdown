@@ -83,7 +83,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.5.1"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.5.2"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
@@ -103,6 +103,7 @@ This trait will all the cuke4duke dependency into your project for use in writin
 ## Customisation ##
 The plugin supports a number of customisations. The following overrides can be added to your project file to change the behaviour of the plugin:
 
+* jrubyVersion - Allows overriding the version of JRuby that will be used (default: 1.6.0.RC3)
 * cucumberVersion - Allows overriding the version of Cucumber that will be used (default: 0.10.0)
 * cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.3)
 * picoContainerVersion - Allows overriding the version of PicoContainer used by cuke4duke (default: 2.11.2)
@@ -129,6 +130,9 @@ The plugin supports a number of before and after hooks. These are provided to al
 
 
 ## Release History ##
+
+### 0.5.2 ###
+* Updated to run using JRuby 1.6.0.RC3 as the old gem system version in JRuby 1.5.6 was causing a number of problems downloading gems on Windows 7/Vista
 
 ### 0.5.1 ###
 * Added debug level logging to JRuby call if SBT logger level is set to debug
