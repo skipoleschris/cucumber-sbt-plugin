@@ -8,11 +8,11 @@ import _root_.sbt._
 trait CucumberProject extends BasicScalaProject {
 
   // Versions - override to support newer versions
+  def jrubyVersion = "1.6.0.RC3"
   def cucumberVersion = "0.10.0"
   def cuke4DukeVersion = "0.4.3"
   def picoContainerVersion = "2.11.2"
   def prawnVersion = "0.8.4"
-  def opensslVersion = "0.7.3"
 
   def gemUrl = "http://rubygems.org/"
 
@@ -41,13 +41,13 @@ trait CucumberProject extends BasicScalaProject {
   private def gemPath = jRubyHome / "gems"
 
   // Cuke4Duke configuration
-  private def cuke4DukeGems = List(Gem("jruby-openssl", opensslVersion, gemUrl),
-                                   Gem("cucumber", cucumberVersion, gemUrl),
+  private def cuke4DukeGems = List(Gem("cucumber", cucumberVersion, gemUrl),
                                    Gem("cuke4duke", cuke4DukeVersion, gemUrl),
                                    Gem("prawn", prawnVersion, gemUrl))
   private def cuke4DukeArgs = List("-Dcuke4duke.objectFactory=cuke4duke.internal.jvmclass.PicoFactory")
   private val cuke4DukeBin = gemPath / "bin" / "cuke4duke"
 
+  private val jrubyComplete = "org.jruby" % "jruby-complete" % jrubyVersion % "test"
   private val cuke4DukeRepo = "Cuke4Duke Maven Repository" at "http://cukes.info/maven"
   private val cuke4Duke = "cuke4duke" % "cuke4duke" % cuke4DukeVersion % "test"
   private val picoContainer = "org.picocontainer" % "picocontainer" % picoContainerVersion % "test"
