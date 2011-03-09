@@ -12,6 +12,9 @@ trait CucumberProject extends BasicScalaProject {
   def cuke4DukeVersion = "0.4.3"
   def picoContainerVersion = "2.11.2"
   def prawnVersion = "0.8.4"
+  def opensslVersion = "0.7.3"
+
+  def gemUrl = "http://rubygems.org/"
 
   // Individual task options - override to customise behaviour
   def extraCucumberOptions: List[String] = Nil
@@ -38,9 +41,10 @@ trait CucumberProject extends BasicScalaProject {
   private def gemPath = jRubyHome / "gems"
 
   // Cuke4Duke configuration
-  private def cuke4DukeGems = List(Gem("cucumber", cucumberVersion, "http://rubygems.org/"),
-                                   Gem("cuke4duke", cuke4DukeVersion, "http://rubygems.org/"),
-                                   Gem("prawn", prawnVersion, "http://rubygems.org"))
+  private def cuke4DukeGems = List(Gem("jruby-openssl", opensslVersion, gemUrl),
+                                   Gem("cucumber", cucumberVersion, gemUrl),
+                                   Gem("cuke4duke", cuke4DukeVersion, gemUrl),
+                                   Gem("prawn", prawnVersion, gemUrl))
   private def cuke4DukeArgs = List("-Dcuke4duke.objectFactory=cuke4duke.internal.jvmclass.PicoFactory")
   private val cuke4DukeBin = gemPath / "bin" / "cuke4duke"
 

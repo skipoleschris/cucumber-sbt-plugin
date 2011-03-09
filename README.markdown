@@ -83,7 +83,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.4.1"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.5.1"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
@@ -107,6 +107,7 @@ The plugin supports a number of customisations. The following overrides can be a
 * cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.3)
 * picoContainerVersion - Allows overriding the version of PicoContainer used by cuke4duke (default: 2.11.2)
 * prawnVersion - Allows overriding the version of the prawn gem that will be used (default 0.8.4)
+* opensslVersion - Allows overriding the version of the openssl gem that will be used (default 0.7.3)
 * featuresDirectory - The location cucumber looks in for feature files (default: info.projectPath / "features")
 * reportPath - The directory that will be used for report generation (default: outputPath / "cucumber-report")
 * htmlReportPath - The name of the file that the html report will be generated into (default: reportPath / "cucumber.html")
@@ -128,6 +129,9 @@ The plugin supports a number of before and after hooks. These are provided to al
 
 
 ## Release History ##
+
+### 0.5.1 ###
+* Added debug level logging to JRuby call if SBT logger level is set to debug
 
 ### 0.5.0 ###
 * Added lifecycle methods that are run before and after cucumber feature executions

@@ -29,7 +29,9 @@ class JRuby(val classpath: PathFinder,
   }
 
   def installGem(gem:String) = {
-    apply(List("-S", "gem", "install", "--no-ri", "--no-rdoc", "--install-dir", gemPath.absolutePath) ++ gem.split("\\s+"))
+    val args = List("-S", "gem", "install", "--no-ri", "--no-rdoc", "--install-dir", gemPath.absolutePath) ++ gem.split("\\s+")
+    if ( log.atLevel(Level.Debug) ) apply("-d" :: args)
+    else apply(args)
   }
 
   private def classpathAsString =
