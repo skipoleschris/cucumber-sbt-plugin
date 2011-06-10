@@ -5,10 +5,10 @@ An [sbt](http://simple-build-tool.googlecode.com/) plugin for running [Cucumber]
 
 Based on the original [cuke4duke-sbt-plugin](https://github.com/rubbish/cuke4duke-sbt-plugin) by rubbish. This implementation upgrades to the latest sbt, cucumber and cuke4duke version and provides more default options. Specifically:
 
-* Works with sbt 0.7.4 & 0.7.5.RC0
-* Works with Cucumber 0.10.0
-* Works with cuke4duke 0.4.3
-* Allows projects compiled and running against Scala 2.8.0 and 2.8.1
+* Works with sbt 0.7.7
+* Works with Cucumber 0.10.6
+* Works with cuke4duke 0.4.4
+* Allows projects compiled and running against Scala 2.8.x and 2.9.x
 * Provides three default actions: cucumber, cucumber-dev and cucumber-html
 
 ## Usage ##
@@ -83,7 +83,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "0.5.2"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "1.0"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
@@ -103,12 +103,11 @@ This trait will all the cuke4duke dependency into your project for use in writin
 ## Customisation ##
 The plugin supports a number of customisations. The following overrides can be added to your project file to change the behaviour of the plugin:
 
-* jrubyVersion - Allows overriding the version of JRuby that will be used (default: 1.6.0.RC3)
-* cucumberVersion - Allows overriding the version of Cucumber that will be used (default: 0.10.0)
-* cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.3)
+* jrubyVersion - Allows overriding the version of JRuby that will be used (default: 1.6.1)
+* cucumberVersion - Allows overriding the version of Cucumber that will be used (default: 0.10.6)
+* cuke4dukeVersion - Allows overriding the version of cuke4duke that will be used (default: 0.4.4)
 * picoContainerVersion - Allows overriding the version of PicoContainer used by cuke4duke (default: 2.11.2)
 * prawnVersion - Allows overriding the version of the prawn gem that will be used (default 0.8.4)
-* opensslVersion - Allows overriding the version of the openssl gem that will be used (default 0.7.3)
 * featuresDirectory - The location cucumber looks in for feature files (default: info.projectPath / "features")
 * reportPath - The directory that will be used for report generation (default: outputPath / "cucumber-report")
 * htmlReportPath - The name of the file that the html report will be generated into (default: reportPath / "cucumber.html")
@@ -128,8 +127,14 @@ The plugin supports a number of before and after hooks. These are provided to al
 
 ## Roadmap ##
 
+No further work will be undertaken on this plugin. A new version for xsbt 0.10 and above is in development.
 
 ## Release History ##
+
+### 1.0 ###
+Final release of this version of the plugin. All new developments will be against the new 0.10 and above versions of sbt.
+
+* Updated to run using JRuby 1.6.1, Cucumber 0.10.6 and Cuke4Duke 0.4.4
 
 ### 0.5.2 ###
 * Updated to run using JRuby 1.6.0.RC3 as the old gem system version in JRuby 1.5.6 was causing a number of problems downloading gems on Windows 7/Vista
