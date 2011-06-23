@@ -6,7 +6,7 @@ An [sbt](http://simple-build-tool.googlecode.com/) plugin for running [Cucumber]
 Based on the original [cuke4duke-sbt-plugin](https://github.com/rubbish/cuke4duke-sbt-plugin) by rubbish. This implementation upgrades to the latest sbt, cucumber and cuke4duke version and provides more default options. Specifically:
 
 * Works with sbt 0.7.7
-* Works with Cucumber 0.10.6
+* Works with Cucumber 1.0.0
 * Works with cuke4duke 0.4.4
 * Allows projects compiled and running against Scala 2.8.x and 2.9.x
 * Provides three default actions: cucumber, cucumber-dev and cucumber-html
@@ -83,7 +83,7 @@ In the plugin definition file (project/plugins/Plugin.scala), add the cucumber-s
 
     class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
       val templemoreRepo = "templemore sbt repo" at "http://templemore.co.uk/repo"
-      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "1.0"
+      val cucumberPlugin = "templemore" % "cucumber-sbt-plugin" % "1.1"
     }
 
 In your project file (i.e. project/build/TestProject.scala), mixin the CucumberProject trait:
@@ -130,6 +130,11 @@ The plugin supports a number of before and after hooks. These are provided to al
 No further work will be undertaken on this plugin. A new version for xsbt 0.10 and above is in development.
 
 ## Release History ##
+
+### 1.1 ###
+Final release of this version of the plugin. All new developments will be against the new 0.10 and above versions of sbt.
+
+* Updated to Cucumber 1.0.0 which was released a couple of days after I made the 1.0 release
 
 ### 1.0 ###
 Final release of this version of the plugin. All new developments will be against the new 0.10 and above versions of sbt.
