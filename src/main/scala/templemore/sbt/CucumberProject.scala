@@ -9,7 +9,7 @@ trait CucumberProject extends BasicScalaProject {
 
   // Versions - override to support newer versions
   def jrubyVersion = "1.6.1"
-  def cucumberVersion = "0.10.6"
+  def cucumberVersion = "1.0.0"
   def cuke4DukeVersion = "0.4.4"
   def picoContainerVersion = "2.11.2"
   def prawnVersion = "0.8.4"
